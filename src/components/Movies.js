@@ -110,6 +110,7 @@ export default class Movies extends Component {
                         </ul>
                     </nav>
                 </div>
+                <br/><br/><br/><br/>
             </div>
             )
         )

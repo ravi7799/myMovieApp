@@ -1,3 +1,9 @@
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+
 import './App.css';
 import Navbar from './components/Navbar'
 import Banner from './components/Banner';
@@ -6,12 +12,13 @@ import Favorite from './components/Favorite';
 
 function App() {
   return (
-    <div className="App">
+    <Router>
       <Navbar/>
-      {/* <Banner/>
-      <Movies/> */}
-      <Favorite/>
-    </div>
+        <Routes>
+          <Route path="/" exact element={(<><Banner/><Movies/></>)}/>
+          <Route path="/favourite" element={<Favorite/>}/>
+        </Routes>
+    </Router>
   );
 }
 

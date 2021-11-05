@@ -43,3 +43,29 @@
 .page-change{
   margin-top: 50px;
 }
+
+.left{
+  margin-left: 3rem;
+}
+
+.favourite-movie-card{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.favourite-movie-img{
+  width: 30%;
+}
+
+.left{
+  margin-top: 63px;
+  margin-right: 20px;
+}
+
+.left-col{
+  padding:8px;
+  color: rgb(0, 0, 0);
+  border: 2px solid rgb(221, 205, 205);
+  border-radius: 2%;
+}
