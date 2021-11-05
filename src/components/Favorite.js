@@ -10,34 +10,44 @@ export default class Favorite extends Component {
         this.state={
             search:"",
             records:3,
-            pagen:1,
+            curPage:1,
             movieList:[],
-            parr:[1],
+            parr:[],
             genres:[],
             curGenre:["All Genres"],
             genreList:{},
             curSearchText:"",
+            limit:5,
         }
     }
 
     async componentDidMount(){
-        const data=JSON.parse(localStorage.getItem("movie_fav") || "[]");
+        let data=JSON.parse(localStorage.getItem("movie_fav") || "[]");
         var availableGenre=["All Genres"];
         const genreData={28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',99:'Documentary',18:'Drama',10751:'Family',14:'Fantasy',36:'History',
         27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Sci-Fi',10770:'TV',53:'Thriller',10752:'War',37:'Western'};
+        
+        let arr=[]
+        for(var i=1;i<=Math.ceil(data.length/this.state.limit);i++){
+            arr.push(i);
+        }
+
+        data=data.slice(0,this.state.limit);
 
         data.map((movie)=>{
             if( !availableGenre.includes(genreData[movie.genre_ids[0]])){
                 availableGenre.push(genreData[movie.genre_ids[0]]);
             }
         })
-        
+
         this.setState({
             movieList:[...data],
             genres:[...availableGenre],
-            genreList:{...genreData}
+            genreList:{...genreData},
+            parr:[...arr],
         })
     }
+
 
     handleGenres=(genre)=>{
         let data=JSON.parse(localStorage.getItem("movie_fav") || "[]");
@@ -48,9 +58,15 @@ export default class Favorite extends Component {
             })
         }
 
+        let arr=[]
+        for(var i=1;i<=Math.ceil(data.length/this.state.limit);i++){
+            arr.push(i);
+        }
+
         this.setState({
             curGenre:genre,
-            movieList:[...data]
+            movieList:[...data],
+            parr:[...arr],
         })        
     }
 
@@ -96,6 +112,45 @@ export default class Favorite extends Component {
         })
     }
 
+    handleLimit=(limitPage)=>{
+        console.log(limitPage);
+        if(limitPage <= 0 || limitPage == undefined){
+            limitPage=5;
+        }
+        let data=JSON.parse(localStorage.getItem("movie_fav") || "[]");
+
+        let arr=[]
+        for(var i=1;i<=Math.ceil(data.length/limitPage);i++){
+            arr.push(i);
+        }
+        data=data.slice(0,limitPage);
+
+        this.setState({
+            limit:limitPage,
+            parr:[...arr],
+            movieList:[...data]
+        })
+    }
+
+    handlePage=(page)=>{
+        let data=JSON.parse(localStorage.getItem("movie_fav") || "[]");
+        var availableGenre=["All Genres"];
+
+        data=data.slice((page-1)*this.state.limit,Math.min(page*this.state.limit,data.length));
+
+        data.map((movie)=>{
+            if( !availableGenre.includes(this.state.genreList[movie.genre_ids[0]])){
+                availableGenre.push(this.state.genreList[movie.genre_ids[0]]);
+            }
+        })
+
+        this.setState({
+            curPage:page,
+            movieList:[...data],
+            genres:[...availableGenre],
+        })
+    }
+
     render() {
         return (
             <div>
@@ -119,7 +174,7 @@ export default class Favorite extends Component {
                         <div className="row row-cols-1">
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control" placeholder="Search" aria-label="Username" value={this.state.curSearchText} onChange={(e)=>this.handleSearchChange(e.target.value)}/>
-                                <input type="number" class="form-control" placeholder="Count Of Results" aria-label="Server" />
+                                <input type="number" class="form-control" placeholder="Count Of Results" aria-label="Server" onChange={(e)=>this.handleLimit(e.target.value)}/>
                             </div>
 
                             <table class="table">
@@ -154,11 +209,13 @@ export default class Favorite extends Component {
 
                             <nav aria-label="Page navigation example">
                             <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                <li class="page-item"><a class="page-link">Previous</a></li>
+                                {
+                                    this.state.parr.map((page)=>(
+                                        <li class="page-item"><a class="page-link" onClick={()=>this.handlePage(page)}>{page}</a></li>
+                                    ))
+                                }
+                                <li class="page-item"><a class="page-link">Next</a></li>
                             </ul>
                             </nav>
                         </div>
