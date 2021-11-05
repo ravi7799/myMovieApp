@@ -133,6 +133,9 @@ export default class Favorite extends Component {
     }
 
     handlePage=(page)=>{
+        if(page <= 0 || page > this.state.parr.length){
+            return;
+        }
         let data=JSON.parse(localStorage.getItem("movie_fav") || "[]");
         var availableGenre=["All Genres"];
 
@@ -209,13 +212,13 @@ export default class Favorite extends Component {
 
                             <nav aria-label="Page navigation example">
                             <ul class="pagination">
-                                <li class="page-item"><a class="page-link">Previous</a></li>
+                                <li class="page-item"><a class="page-link" onClick={()=>this.handlePage(this.state.curPage-1)}>Previous</a></li>
                                 {
                                     this.state.parr.map((page)=>(
                                         <li class="page-item"><a class="page-link" onClick={()=>this.handlePage(page)}>{page}</a></li>
                                     ))
                                 }
-                                <li class="page-item"><a class="page-link">Next</a></li>
+                                <li class="page-item"><a class="page-link" onClick={()=>this.handlePage(this.state.curPage+1)}>Next</a></li>
                             </ul>
                             </nav>
                         </div>
