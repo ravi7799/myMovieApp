@@ -70,6 +70,32 @@ export default class Favorite extends Component {
         })
     }
 
+    sortPopular=(desc)=>{
+        let data=[...this.state.movieList];
+        
+        if(!desc)
+            data.sort(function(a,b){return a.popularity-b.popularity});
+        else
+            data.sort(function(a,b){return -a.popularity+b.popularity});
+
+        this.setState({
+            movieList: [...data],
+        })
+    }
+
+    sortRating=(desc)=>{
+        let data=[...this.state.movieList];
+        
+        if(!desc)
+            data.sort(function(a,b){return a.vote_average-b.vote_average});
+        else
+            data.sort(function(a,b){return -a.vote_average+b.vote_average});
+
+        this.setState({
+            movieList: [...data],
+        })
+    }
+
     render() {
         return (
             <div>
@@ -101,8 +127,8 @@ export default class Favorite extends Component {
                                     <tr>
                                     <th scope="col">Title</th>
                                     <th scope="col">Genre</th>
-                                    <th scope="col">Popularity</th>
-                                    <th scope="col">Rating</th>
+                                    <th scope="col"><i class="fas fa-sort-up" onClick={()=>this.sortPopular(false)}></i>Popularity<i class="fas fa-sort-down" onClick={()=>this.sortPopular(true)}></i></th>
+                                    <th scope="col"><i class="fas fa-sort-up" onClick={()=>this.sortRating(false)}></i>Rating<i class="fas fa-sort-down" onClick={()=>this.sortPopular(true)}></i></th>
                                     <th scope="col"></th>
                                     </tr>
                                 </thead>
