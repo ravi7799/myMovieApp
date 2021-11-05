@@ -97,7 +97,7 @@ export default class Movies extends Component {
                         })                
                     }
                 </div>
-                <div className="page-change">
+                <div className="page-change page-footer">
                     <nav aria-label="Page navigation example">
                         <ul className="pagination">
                             <li className="page-item"><a className="page-link" onClick={this.handleLeft}>Previous</a></li>
@@ -110,7 +110,6 @@ export default class Movies extends Component {
                         </ul>
                     </nav>
                 </div>
-                <br/><br/><br/><br/>
             </div>
             )
         )

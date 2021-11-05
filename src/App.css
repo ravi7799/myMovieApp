@@ -69,3 +69,7 @@
   border: 2px solid rgb(221, 205, 205);
   border-radius: 2%;
 }
+
+.page-footer{
+  padding-bottom: 100px;
+}
