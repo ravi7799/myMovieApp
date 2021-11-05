@@ -12,6 +12,7 @@ export default class Movies extends Component {
             parr:[1],
             curPage:1,
             movies:[],
+            favMovies:[]
         }
     }
 
@@ -19,10 +20,16 @@ export default class Movies extends Component {
         //Side effects
         const res=await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=4de9a85a4c8bce8f827138df0694474f&language=en-US&page=${this.state.curPage}`)
         let data=res.data;
-        this.setState({
-            movies:[...data.results]
+        let oldData=JSON.parse(localStorage.getItem("movie_fav") || "[]");
+        let favData=[];
+        oldData.map((movieObj)=>{
+            favData.push(movieObj.id);
         })
-        console.log("mounting done");
+        this.setState({
+            movies:[...data.results],
+            favMovies:[...favData]
+        })
+    
     }
 
     changeMovie=async ()=>{
@@ -61,6 +68,31 @@ export default class Movies extends Component {
         },this.changeMovie)
     }
 
+
+    handleSaveFavourite=(movie)=>{
+        let oldData=JSON.parse(localStorage.getItem("movie_fav") || "[]");
+
+        if(this.state.favMovies.includes(movie.id)){
+            oldData=oldData.filter((movieObj)=>{return movieObj.id != movie.id});
+
+            let newfav=[...this.state.favMovies];
+            newfav=newfav.filter((Mid)=>{return Mid != movie.id});
+            this.setState({
+                favMovies:[...newfav]
+            })
+        }else{
+            oldData.push(movie);
+
+            let newfav=[...this.state.favMovies];
+            newfav.push(movie.id);
+            this.setState({
+                favMovies:[...newfav]
+            })
+        }
+
+        localStorage.setItem("movie_fav",JSON.stringify(oldData));
+    }
+
     render() {
         console.log("render");
     
@@ -89,7 +121,11 @@ export default class Movies extends Component {
                                                 this.state.hover==movie.id && 
                                                 <p className="card-text card-data">{movie.overview}</p>
                                             }
-                                            <a href="#" className="btn btn-primary">Click To Watch</a>
+                                            {
+                                                this.state.favMovies.includes(movie.id)?
+                                                <a className="btn btn-primary" onClick={()=>this.handleSaveFavourite(movie)}>Remove from Favourite</a>
+                                                :<a className="btn btn-primary" onClick={()=>this.handleSaveFavourite(movie)}>Add to Favourite</a>
+                                            }
                                         </div>
                                     </div>
                                 )
